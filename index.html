@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Number Lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .search-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .result-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .loading {
+            text-align: center;
+            display: none;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Phone Number Lookup</h1>
+    
+    <div class="search-container">
+        <input type="text" id="phoneNumber" placeholder="Enter phone number (e.g., 03338570120)">
+        <button onclick="searchNumber()">Search</button>
+        <div id="error" class="error"></div>
+    </div>
+    
+    <div id="loading" class="loading">
+        <p>Searching... Please wait</p>
+    </div>
+    
+    <div id="results" class="result-container">
+        <p>Enter a phone number and click "Search" to get information</p>
+    </div>
+    
+    <script>
+        function searchNumber() {
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const resultsDiv = document.getElementById('results');
+            const errorDiv = document.getElementById('error');
+            const loadingDiv = document.getElementById('loading');
+            
+            // Clear previous results and errors
+            errorDiv.textContent = '';
+            resultsDiv.innerHTML = '';
+            
+            // Validate input
+            if (!phoneNumber) {
+                errorDiv.textContent = 'Please enter a phone number';
+                return;
+            }
+            
+            // Show loading indicator
+            loadingDiv.style.display = 'block';
+            
+            // Make API request
+            const apiUrl = `https://pakdatabase.site/api/search.php?username=Kami&password=123456&search_term=${encodeURIComponent(phoneNumber)}`;
+            
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    loadingDiv.style.display = 'none';
+                    
+                    if (data.error) {
+                        resultsDiv.innerHTML = `<p>${data.error}</p>`;
+                    } else if (data.length === 0) {
+                        resultsDiv.innerHTML = '<p>No results found for this number</p>';
+                    } else {
+                        let html = '<h2>Search Results</h2>';
+                        data.forEach(item => {
+                            html += `
+                                <div class="result-item">
+                                    <p><strong>Number:</strong> ${item.number || 'N/A'}</p>
+                                    <p><strong>Name:</strong> ${item.name || 'N/A'}</p>
+                                    <p><strong>Address:</strong> ${item.address || 'N/A'}</p>
+                                    <p><strong>City:</strong> ${item.city || 'N/A'}</p>
+                                    <p><strong>CNIC:</strong> ${item.cnic || 'N/A'}</p>
+                                </div>
+                            `;
+                        });
+                        resultsDiv.innerHTML = html;
+                    }
+                })
+                .catch(error => {
+                    loadingDiv.style.display = 'none';
+                    resultsDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                });
+        }
+        
+        // Allow searching by pressing Enter key
+        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchNumber();
+            }
+        });
+    </script>
+</body>
+</html>
