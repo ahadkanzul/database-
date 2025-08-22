@@ -1,462 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Phone Number Lookup</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .search-container {
-            background-color: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-        .input-group {
-            flex-grow: 1;
-            min-width: 300px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-        input[type="text"]:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
-        }
-        button {
-            padding: 12px 25px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background-color 0.3s;
-            white-space: nowrap;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        .result-container {
-            background-color: white;
-            padding: 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
-        .loading {
-            text-align: center;
-            padding: 30px;
-            display: none;
-        }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid #3498db;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .error {
-            color: #e74c3c;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #fde8e8;
-            border-radius: 4px;
-            display: none;
-        }
-        .no-results {
-            padding: 30px;
-            text-align: center;
-            color: #7f8c8d;
-        }
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .data-table th {
-            background-color: #3498db;
-            color: white;
-            padding: 12px 15px;
-            text-align: left;
-        }
-        .data-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            vertical-align: top;
-        }
-        .data-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        .data-table tr:hover {
-            background-color: #f1f7fd;
-        }
-        .json-viewer {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px;
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            overflow-x: auto;
-        }
-        .tab-container {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-        }
-        .tab {
-            padding: 12px 20px;
-            cursor: pointer;
-            background-color: #f1f1f1;
-            border: none;
-            transition: background-color 0.3s;
-        }
-        .tab.active {
-            background-color: white;
-            border-bottom: 2px solid #3498db;
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-            padding: 20px;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .copy-btn {
-            background-color: #2ecc71;
-            padding: 6px 12px;
-            font-size: 14px;
-            float: right;
-            margin-top: 10px;
-        }
-        .copy-btn:hover {
-            background-color: #27ae60;
-        }
-    </style>
-</head>
-<body>
-    <h1>Advanced Phone Number Lookup</h1>
-    
-    <div class="search-container">
-        <div class="input-group">
-            <input type="text" id="phoneNumber" placeholder="Enter phone number (e.g., 03338570120)" autocomplete="off">
-            <div id="error" class="error"></div>
-        </div>
-        <button onclick="searchNumber()">Search Number</button>
-    </div>
-    
-    <div id="loading" class="loading">
-        <div class="spinner"></div>
-        <p>Searching database...</p>
-    </div>
-    
-    <div id="results" class="result-container">
-        <div class="no-results">
-            <p>Enter a phone number to search the database</p>
-        </div>
-    </div>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pakistan SIM Database | Muhammad Ahad</title>
+  <style>
+    /* Cursor & Glitchy Glow */
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: black;
+      font-family: 'Courier New', Courier, monospace;
+      color: #00ff99;
+      cursor: crosshair;
+    }
 
-    <script>
-        function searchNumber() {
-            const phoneNumber = document.getElementById('phoneNumber').value.trim();
-            const resultsDiv = document.getElementById('results');
-            const errorDiv = document.getElementById('error');
-            const loadingDiv = document.getElementById('loading');
-            
-            // Clear previous results and errors
-            errorDiv.textContent = '';
-            errorDiv.style.display = 'none';
-            loadingDiv.style.display = 'none';
-            
-            // Validate input
-            if (!phoneNumber) {
-                errorDiv.textContent = 'Please enter a phone number';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            // Validate phone number format (basic check for Pakistani numbers)
-            if (!/^[0-9]{10,12}$/.test(phoneNumber)) {
-                errorDiv.textContent = 'Please enter a valid phone number (10-12 digits)';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            // Show loading indicator
-            loadingDiv.style.display = 'block';
-            
-            // Make API request
-            const apiUrl = `https://pakdatabase.site/api/search.php?username=Kami&password=123456&search_term=${encodeURIComponent(phoneNumber)}`;
-            
-            fetch(apiUrl)
-                .then(response => {
-                    loadingDiv.style.display = 'none';
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    displayResults(data);
-                })
-                .catch(error => {
-                    loadingDiv.style.display = 'none';
-                    errorDiv.textContent = `Error: ${error.message}`;
-                    errorDiv.style.display = 'block';
-                    resultsDiv.innerHTML = `
-                        <div class="no-results">
-                            <p>Failed to fetch data. Please try again later.</p>
-                        </div>
-                    `;
-                });
-        }
-        
-        function displayResults(data) {
-            const resultsDiv = document.getElementById('results');
-            
-            if (!data || (Array.isArray(data) && data.length === 0)) {
-                resultsDiv.innerHTML = `
-                    <div class="no-results">
-                        <p>No results found for this number</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // If we get an error message instead of data
-            if (data.error) {
-                resultsDiv.innerHTML = `
-                    <div class="no-results">
-                        <p>${data.error}</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Convert single object to array for consistent processing
-            const resultsArray = Array.isArray(data) ? data : [data];
-            
-            // Create tabbed interface
-            let html = `
-                <div class="tab-container">
-                    <button class="tab active" onclick="switchTab('table-view')">Table View</button>
-                    <button class="tab" onclick="switchTab('json-view')">Raw JSON</button>
-                </div>
-                <div id="table-view" class="tab-content active">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                ${Object.keys(resultsArray[0]).map(key => `<th>${key}</th>`).join('')}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${resultsArray.map(item => `
-                                <tr>
-                                    ${Object.values(item).map(value => `
-                                        <td>${value || 'N/A'}</td>
-                                    `).join('')}
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-                <div id="json-view" class="tab-content">
-                    <button class="copy-btn" onclick="copyToClipboard()">Copy JSON</button>
-                    <div class="json-viewer" id="json-data">${JSON.stringify(data, null, 2)}</div>
-                </div>
-            `;
-            
-            resultsDiv.innerHTML = html;
-        }
-        
-        function switchTab(tabId) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Deactivate all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Activate selected tab
-            document.getElementById(tabId).classList.add('active');
-            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
-        }
-        
-        function copyToClipboard() {
-            const jsonData = document.getElementById('json-data').textContent;
-            navigator.clipboard.writeText(jsonData).then(() => {
-                const copyBtn = document.querySelector('.copy-btn');
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Copied!';
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                }, 2000);
-            });
-        }
-        
-        // Allow searching by pressing Enter key
-        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchNumber();
-            }
-        });
-    </script>
-</body>
-</html>            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-left: 10px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .result-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .result-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .result-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        .loading {
-            text-align: center;
-            display: none;
-        }
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #00ffcc;
+      font-size: 2em;
+      margin-top: 30px;
+      text-shadow: 0 0 5px #00ff99, 0 0 20px #00ff99, 0 0 40px #00ff99;
+      animation: flicker 1.5s infinite alternate;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 1; text-shadow: 0 0 5px #00ff99; }
+      100% { opacity: 0.8; text-shadow: 0 0 10px #00ff99, 0 0 20px #00ffcc; }
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.85);
+      border-radius: 15px;
+      box-shadow: 0 0 40px #00ff99;
+      border: 1px solid #00ff99;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #00ff99;
+      background: #000;
+      color: #00ff99;
+      font-size: 16px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px #00ff99 inset;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      color: black;
+      background: linear-gradient(145deg, #00ff99, #00cc77);
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #00ff99;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ff99, 0 0 50px #00ff99;
+    }
+
+    .formatted-data {
+      background-color: #111;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 0 15px #00ff99;
+      animation: typeIn 0.5s steps(40) 1;
+      overflow: hidden;
+    }
+
+    @keyframes typeIn {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    .separator {
+      height: 2px;
+      background: #00ff99;
+      margin: 15px 0;
+      border-radius: 10px;
+    }
+
+    .error, .loading {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-weight: bold;
+      box-shadow: 0 0 10px red;
+    }
+
+    .error { color: #ff6666; }
+    .loading { color: #00ff99; box-shadow: 0 0 10px #00ff99; }
+
+    .links {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .links a {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px 20px;
+      background: #00ff99;
+      color: black;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ff99;
+      transition: 0.3s ease;
+    }
+
+    .links a:hover {
+      background: #00cc77;
+      box-shadow: 0 0 20px #00ff99;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #888;
+      margin-top: 40px;
+    }
+
+    .intro-terminal {
+      background: #000;
+      color: #00ff99;
+      font-family: monospace;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 700px;
+      border-radius: 10px;
+      border: 1px solid #00ff99;
+      box-shadow: 0 0 15px #00ff99;
+    }
+
+    .intro-terminal span::after {
+      content: '_';
+      animation: blink 1s steps(2, start) infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Phone Number Lookup</h1>
-    
-    <div class="search-container">
-        <input type="text" id="phoneNumber" placeholder="Enter phone number (e.g., 03338570120)">
-        <button onclick="searchNumber()">Search</button>
-        <div id="error" class="error"></div>
-    </div>
-    
-    <div id="loading" class="loading">
-        <p>Searching... Please wait</p>
-    </div>
-    
-    <div id="results" class="result-container">
-        <p>Enter a phone number and click "Search" to get information</p>
-    </div>
-    
-    <script>
-        function searchNumber() {
-            const phoneNumber = document.getElementById('phoneNumber').value.trim();
-            const resultsDiv = document.getElementById('results');
-            const errorDiv = document.getElementById('error');
-            const loadingDiv = document.getElementById('loading');
-            
-            // Clear previous results and errors
-            errorDiv.textContent = '';
-            resultsDiv.innerHTML = '';
-            
-            // Validate input
-            if (!phoneNumber) {
-                errorDiv.textContent = 'Please enter a phone number';
-                return;
-            }
-            
-            // Show loading indicator
-            loadingDiv.style.display = 'block';
-            
-            // Make API request
-            const apiUrl = `https://pakdatabase.site/api/search.php?username=Kami&password=123456&search_term=${encodeURIComponent(phoneNumber)}`;
-            
-            fetch(apiUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    loadingDiv.style.display = 'none';
-                    
-                    if (data.error) {
-                        resultsDiv.innerHTML = `<p>${data.error}</p>`;
-                    } else if (data.length === 0) {
-                        resultsDiv.innerHTML = '<p>No results found for this number</p>';
-                    } else {
-                        let html = '<h2>Search Results</h2>';
-                        data.forEach(item => {
-                            html += `
-                                <div class="result-item">
-                                    <p><strong>Number:</strong> ${item.number || 'N/A'}</p>
-                                    <p><strong>Name:</strong> ${item.name || 'N/A'}</p>
-                                    <p><strong>Address:</strong> ${item.address || 'N/A'}</p>
-                                    <p><strong>City:</strong> ${item.city || 'N/A'}</p>
-                                    <p><strong>CNIC:</strong> ${item.cnic || 'N/A'}</p>
-                                </div>
-                            `;
-                        });
-                        resultsDiv.innerHTML = html;
-                    }
-                })
-                .catch(error => {
-                    loadingDiv.style.display = 'none';
-                    resultsDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
-                });
+  <canvas id="matrixCanvas"></canvas>
+
+  <div class="intro-terminal">
+    <p><span>Initializing SIM Data Interface...</span></p>
+    <p><span>Accessing Secure Database...</span></p>
+    <p><span>✔️ Connection Established</span></p>
+  </div>
+
+  <h1>📱 Pakistan SIM Database 📱</h1>
+  <h2>Powered by Muhammad Ahad</h2>
+
+  <div class="container">
+    <input type="text" id="simNumber" placeholder="🔍 Enter Mobile and CNIC Number e.g., 03XXXXXXXXX">
+    <button onclick="fetchSimData()">🔍 Search SIM Data</button>
+    <div id="responseBox"></div>
+  </div>
+
+  <div class="links"></div>
+  <div class="footer">
+    ⚡ Designed with ❤️ by Muhammad Ahad | Ethical Hacker Style | Dark Neon UI
+  </div>
+
+  <!-- Matrix Background Script -->
+  <script>
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const letters = "アァイイウエカキクケコサシスセソタチツテナニヌネハヒフヘホマミムメヤユヨラリルレロワンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ff99";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 35);
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+
+  <!-- SIM Data Script -->
+  <script>
+    async function fetchSimData() {
+      const number = document.getElementById("simNumber").value.trim();
+      const responseBox = document.getElementById("responseBox");
+
+      responseBox.innerHTML = '';
+
+      if (!number) {
+        responseBox.innerHTML = '<div class="error">❌ Please enter a mobile and CNIC number.</div>';
+        return;
+      }
+
+      if (!number.match(/^\d{10,13}$/)) {
+        responseBox.innerHTML = '<div class="error">❌ Please enter a valid number (10-13 digits).</div>';
+        return;
+      }
+
+      responseBox.innerHTML = '<div class="loading">⏳ Querying Matrix Grid...</div>';
+
+      const url = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://famofcfallxd.serv00.net/apis/famdata.php?num=03xxx}`)}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Status: ${response.status}`);
+
+        const result = await response.json();
+        const apiData = JSON.parse(result.contents);
+
+        responseBox.innerHTML = '';
+
+        if (apiData.status === "success" && apiData.data && apiData.data.length > 0) {
+          let formattedData = '';
+          apiData.data.forEach(user => {
+            formattedData += `
+              <div class="formatted-data">
+                <p><strong>🔹 Name:</strong> ${user.name || "N/A"}</p>
+                <p><strong>🔹 Mobile:</strong> ${user.mobile || "N/A"}</p>
+                <p><strong>🔹 CNIC:</strong> ${user.cnic || "N/A"}</p>
+                <p><strong>🔹 Address:</strong> ${user.address || "N/A"}</p>
+              </div>
+              <div class="separator"></div>
+            `;
+          });
+          responseBox.innerHTML = formattedData;
+        } else {
+          responseBox.innerHTML = `<div class="error">❌ ${apiData.message || 'No data found for this number'}</div>`;
         }
-        
-        // Allow searching by pressing Enter key
-        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchNumber();
-            }
-        });
-    </script>
+      } catch (error) {
+        responseBox.innerHTML = `<div class="error">❌ API Error: ${error.message}</div>`;
+      }
+    }
+  </script>
 </body>
-</html>
+    </html>
