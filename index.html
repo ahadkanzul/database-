@@ -150,7 +150,7 @@
 
     <!-- Main Dashboard -->
     <div class="container" id="mainApp">
-      <h2>📱 Live Tracker Lookup</h2>
+      <h2>📱 Ahad SIM Information</h2>
       <input type="text" id="num" placeholder="Enter phone number">
       <button onclick="searchNumber()">Search</button>
       <div id="results"></div>
@@ -217,8 +217,8 @@
         msg.innerText = "";
         accessMsg.style.display = "block";
 
-        // Play robotic voice "Welcome to Ahad SIM database"
-        const utter = new SpeechSynthesisUtterance("Welcome to Ahad SIM database");
+        // Play robotic voice "Welcome to Ahad SIM Information"
+        const utter = new SpeechSynthesisUtterance("Welcome to Ahad SIM Information");
         utter.rate = 0.9; // slower, robotic effect
         utter.pitch = 0.6;
         speechSynthesis.speak(utter);
@@ -297,11 +297,11 @@
         <div class="header">
             <h1>SIM Details</h1>
         </div>
-        <p class="operator">Enter a Mobile Number to Check Registered Details</p>
+        <p class="operator">Enter a Mobile Number and Cnic to Check Registered Details</p>
         <form method="POST">
             <input type="hidden" name="csrf_token" value="ae0e1057ed1f7d192aa89f0c10157202c7eb35ef4c68e5759dbbfb2891b56400">
             <div class="form-group">
-                <input type="text" name="mobile_number" placeholder="Enter Mobile Number (e.g., 03338570120)" value="">
+                <input type="text" name="mobile_number" "cnic" placeholder="Enter Mobile Number (e.g., 923338570120)" value="">
             </div>
             <div class="form-group">
                 <button type="submit">Search</button>
@@ -339,5 +339,6 @@
     </script>
 </body>
 </html>
+
 
 
