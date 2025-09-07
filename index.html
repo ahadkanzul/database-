@@ -168,7 +168,7 @@
     }
     resizeCanvas();
 
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
+    const letters = "10101010100101010101010101010";
     const fontSize = 16;
     let columns = canvas.width / fontSize;
     const drops = [];
@@ -217,8 +217,8 @@
         msg.innerText = "";
         accessMsg.style.display = "block";
 
-        // Play robotic voice "Welcome Ahad"
-        const utter = new SpeechSynthesisUtterance("Welcome Ahad");
+        // Play robotic voice "Welcome to Ahad SIM database"
+        const utter = new SpeechSynthesisUtterance("Welcome to Ahad SIM database");
         utter.rate = 0.9; // slower, robotic effect
         utter.pitch = 0.6;
         speechSynthesis.speak(utter);
@@ -235,6 +235,7 @@
     // LOOKUP FUNCTION
     async function searchNumber() {
       const num = document.getElementById("num").value.trim();
+      const cnic = document.getElementById("cnic").value.trim();
       const resultsDiv = document.getElementById("results");
       resultsDiv.innerHTML = "⏳ Loading...";
 
@@ -338,4 +339,5 @@
     </script>
 </body>
 </html>
+
 
